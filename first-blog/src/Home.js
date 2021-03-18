@@ -13,7 +13,8 @@ const Home = () => {
 
     return (
       <div className="home">
-       <BlogList blogs={blogs} title="All blogs"/>  {/* prop */}
+       <BlogList blogs={blogs} title="All blogs:"/>  {/* prop - more reusable, lahko kopiramo, itd... */}
+       <BlogList blogs={blogs.filter((blog) => blog.author === 'mario')} title="Mario's Blogs:"/>  {/* prop - filtered samo za mario */}
       </div>
     );
   }
