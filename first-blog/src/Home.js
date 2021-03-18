@@ -10,10 +10,14 @@ const Home = () => {
       ]
     );
   
+    const handleDelete = (id) => {
+      const newBlogs = blogs.filter(blog => blog.id !== id); //vrnem new filtered array based on original array
+      setBlogs(newBlogs); //blogu nastavim novo vrednost, če je id enak id-ju v tabeli se zbriše
+    }
 
     return (
       <div className="home">
-       <BlogList blogs={blogs} title="All blogs:"/>  {/* prop - more reusable, lahko kopiramo, itd... */}
+       <BlogList blogs={blogs} title="All blogs:" handleDelete={handleDelete}/>  {/* prop - more reusable, lahko kopiramo, itd... */}
        <BlogList blogs={blogs.filter((blog) => blog.author === 'mario')} title="Mario's Blogs:"/>  {/* prop - filtered samo za mario */}
       </div>
     );
