@@ -2,15 +2,10 @@ import { useState, useEffect } from 'react';
 import BlogList from './BlogList';
 
 const Home = () => {
-    const [blogs, setBlogs] = useState(
-      [
-        { title: 'My new website', body: 'lorem ipsum...', author: 'mario', id: 1 },
-        { title: 'Welcome party!', body: 'lorem ipsum...', author: 'yoshi', id: 2 },
-        { title: 'Web dev top tips', body: 'lorem ipsum...', author: 'mario', id: 3 }
-      ]
-    );
-  
-      const [name, setName] = useState('Tim');
+
+    const [blogs, setBlogs] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const handleDelete = (id) => {
       const newBlogs = blogs.filter(blog => blog.id !== id); //vrnem new filtered array based on original array
@@ -18,16 +13,31 @@ const Home = () => {
     }
 
     useEffect(() => {
-      console.log('use effect ran');
-      console.log(name);
-    }, [name]);
+      fetch('http://localhost:8000/blogs')  //promise... ko se to zgodi bo sprožlo funkcijo then
+          .then(res => {
+            console.log(res);
+            if (!res.ok) {
+              setIsLoading(false);
+              throw Error('Could not Fetch the data for that resource.');
+            }
+            return res.json();
+          })
+          .then((data) => {
+            setBlogs(data);
+            setIsLoading(false);
+          })
+          .catch(err => {
+            setError(err.message);
+          })
+    }, []);
+
+
 
     return (
       <div className="home">
-       <BlogList blogs={blogs} title="All blogs:" handleDelete={handleDelete}/>  {/* prop - more reusable, lahko kopiramo, itd... */}
-       <BlogList blogs={blogs.filter((blog) => blog.author === 'mario')} title="Mario's Blogs:"/>  {/* prop - filtered samo za mario */}
-       <button onClick={() => setName('Luigi')}>Change name</button>
-       <p>{name}</p>
+        { error && <div>{error}</div> }
+        { isLoading && <div>Loading data from server...</div> }
+        <BlogList blogs={blogs} title="All blogs:" handleDelete={handleDelete}/>
       </div>
     );
   }
