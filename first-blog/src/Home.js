@@ -26,7 +26,7 @@ const Home = () => {
             setBlogs(data);
             setIsLoading(false);
           })
-          .catch(err => {
+          .catch(err => {   //catcha kakršenkoli network error
             setError(err.message);
           })
     }, []);
